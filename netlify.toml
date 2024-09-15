@@ -5,6 +5,9 @@
 [functions]
   directory = "functions"
   node_bundler = "esbuild"
+  included_files = ["models/**/*.js"]
+  external_node_modules = ["mongoose"]
+  timeout = "30s"
 
 [[redirects]]
   from = "/api/docs/*"
@@ -20,6 +23,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[functions.api]
-  timeout = 30

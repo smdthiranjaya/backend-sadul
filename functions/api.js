@@ -7,7 +7,7 @@ const YAML = require("yamljs"); // To load YAML file
 require("dotenv").config();
 const TrainLocation = require("./models/trainLocationModel");
 const Location = require("./models/locationModel");
-
+const connectToDatabase = require("./dbConnect");
 const app = express();
 app.use(bodyParser.json());
 
@@ -61,40 +61,30 @@ connectWithRetry();
 app.get("/api/all-train-locations", async (req, res) => {
   console.log("Fetching all train locations...");
   try {
-    const allLocations = await TrainLocation.find()
-      .sort({ timestamp: -1 })
-      .limit(100);
+    await connectToDatabase();
+    const allLocations = await TrainLocation.find().sort({ timestamp: -1 }).limit(100);
     console.log(`Found ${allLocations.length} locations`);
     res.status(200).json(allLocations);
   } catch (error) {
     console.error("Error fetching all train locations:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error fetching train locations",
-        details: error.message,
-      });
+    res.status(500).json({ error: "Error fetching train locations", details: error.message });
   }
 });
 
 app.get("/api/train-locations/:trainId/latest", async (req, res) => {
   console.log(`Fetching latest location for train ${req.params.trainId}`);
   try {
+    await connectToDatabase();
     const { trainId } = req.params;
-    const latestLocation = await TrainLocation.findOne({ trainId })
-      .sort({ timestamp: -1 })
-      .maxTimeMS(5000)
-      .exec();
-
+    const latestLocation = await TrainLocation.findOne({ trainId }).sort({ timestamp: -1 }).exec();
+    
     if (!latestLocation) {
       console.log("Train location not found");
       return res.status(404).json({ error: "Train location not found" });
     }
 
     const { latitude, longitude, timestamp } = latestLocation;
-    const location = await Location.findOne({ latitude, longitude }).maxTimeMS(
-      5000
-    );
+    const location = await Location.findOne({ latitude, longitude });
     const name = location ? location.name : "Unknown";
 
     const response = { trainId, latitude, longitude, name, timestamp };
@@ -102,36 +92,21 @@ app.get("/api/train-locations/:trainId/latest", async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching latest train location:", error);
-    if (error.name === "MongoTimeoutError") {
-      res
-        .status(504)
-        .json({
-          error: "Database operation timed out",
-          details: "Please try again later",
-        });
-    } else {
-      res
-        .status(500)
-        .json({
-          error: "Error retrieving location data",
-          details: error.message,
-        });
-    }
+    res.status(500).json({ error: "Error retrieving location data", details: error.message });
   }
 });
 
 app.post("/api/train-locations", async (req, res) => {
   console.log("Adding new train location");
   try {
+    await connectToDatabase();
     const newLocation = new TrainLocation(req.body);
     const savedLocation = await newLocation.save();
     console.log("New location added:", savedLocation);
     res.status(201).json(savedLocation);
   } catch (error) {
     console.error("Error adding new train location:", error);
-    res
-      .status(500)
-      .json({ error: "Error adding train location", details: error.message });
+    res.status(500).json({ error: "Error adding train location", details: error.message });
   }
 });
 
