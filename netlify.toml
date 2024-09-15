@@ -7,7 +7,9 @@
   node_bundler = "esbuild"
   included_files = ["models/**/*.js"]
   external_node_modules = ["mongoose"]
-  timeout = "30s"
+
+[functions.api]
+  timeout = 30
 
 [[redirects]]
   from = "/api/docs/*"
