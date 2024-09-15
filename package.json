@@ -4,13 +4,13 @@
   "description": "Your project description",
   "main": "netlify/functions/api.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.0",
     "serverless-http": "^2.7.0",
-    "body-parser": "^1.19.0",
-    "swagger-ui-express": "^4.1.6",
-    "yamljs": "^0.3.0",
-    "dotenv": "^10.0.0"
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "scripts": {
     "start": "netlify dev"

@@ -5,7 +5,7 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["models/**/*.js"]
+  included_files = ["models/**/*.js", "swagger/**/*.yaml"]
   external_node_modules = ["mongoose"]
 
 [functions.api]
@@ -13,16 +13,11 @@
   timeout = 30
 
 [[redirects]]
-  from = "/api/docs/*"
+  from = "/docs"
+  to = "/.netlify/functions/api/docs"
+  status = 200
+
+[[redirects]]
+  from = "/docs/*"
   to = "/.netlify/functions/api/docs/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
   status = 200

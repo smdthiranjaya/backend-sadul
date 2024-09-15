@@ -7,26 +7,33 @@ require("dotenv").config();
 const TrainLocation = require("./models/trainLocationModel");
 const Location = require("./models/locationModel");
 const connectToDatabase = require("./dbConnect");
-const swaggerDocument = require("../../swagger/swagger.json");
 const app = express();
+const YAML = require("yamljs");
+const path = require("path");
+const swaggerDocument = YAML.load(
+  path.join(__dirname, "../../swagger/swagger.yaml")
+);
+
 app.use(bodyParser.json());
 
-const mongoUri = process.env.MONGO_URL;
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Serve Swagger UI
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Your existing routes
 app.get("/api/all-train-locations", async (req, res) => {
   console.log("Fetching all train locations...");
   try {
     await connectToDatabase();
-    const allLocations = await TrainLocation.find().sort({ timestamp: -1 }).limit(100);
+    const allLocations = await TrainLocation.find()
+      .sort({ timestamp: -1 })
+      .limit(100);
     console.log(`Found ${allLocations.length} locations`);
     res.status(200).json(allLocations);
   } catch (error) {
     console.error("Error fetching all train locations:", error);
-    res.status(500).json({ error: "Error fetching train locations", details: error.message });
+    res.status(500).json({
+      error: "Error fetching train locations",
+      details: error.message,
+    });
   }
 });
 
@@ -53,12 +60,10 @@ app.get("/api/train-locations/:trainId/latest", async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching latest train location:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error retrieving location data",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error retrieving location data",
+      details: error.message,
+    });
   }
 });
 
