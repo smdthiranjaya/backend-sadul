@@ -1,14 +1,15 @@
 [build]
-  command = "npm install"
-  functions = "functions"
+  command = "npm install && npm run build"  # Added build step
+  functions = "netlify/functions"  # Updated functions directory
 
 [functions]
-  directory = "functions"
+  directory = "netlify/functions"  # Updated to match the build.functions
   node_bundler = "esbuild"
   included_files = ["models/**/*.js"]
   external_node_modules = ["mongoose"]
 
 [functions.api]
+  handler = "api.handler"  # Explicitly specify the handler
   timeout = 30
 
 [[redirects]]
