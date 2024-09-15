@@ -43,19 +43,19 @@ const connectWithRetry = () => {
 
 connectWithRetry();
 
-// // Load swagger.yaml
-// const swaggerDocument = YAML.load('swagger.yaml'); // Assuming swagger.yaml is in the project root
-// console.log("swaggerDocument: ", swaggerDocument); // Add this line after loading the YAML file
+// Load swagger.yaml
+const swaggerDocument = YAML.load('swagger.yaml'); // Assuming swagger.yaml is in the project root
+console.log("swaggerDocument: ", swaggerDocument); // Add this line after loading the YAML file
 
-// // Serve Swagger UI
-// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Serve Swagger UI
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// // Serve Swagger YAML as JSON
-// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
-//   swaggerOptions: {
-//     url: "/api/swagger.yaml",  // Or provide the correct relative path to your swagger.yaml file
-//   },
-// }));
+// Serve Swagger YAML as JSON
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  swaggerOptions: {
+    url: "/api/swagger.yaml",  // Or provide the correct relative path to your swagger.yaml file
+  },
+}));
 
 // Your existing routes
 app.get("/api/all-train-locations", async (req, res) => {
