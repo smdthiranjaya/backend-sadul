@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "concurrently \"npm run start:api-gateway\" \"npm run start:train-location\" \"npm run start:websocket\"",
+    "start": "netlify dev",
     "start1": "concurrently \"npm run start:api-gateway\" \"npm run start:train-location\"",
     "start:api-gateway": "node apiGateway.js",
     "start:train-location": "node Services/trainLocationService.js",
@@ -14,7 +14,11 @@
     "http-proxy-middleware": "^3.0.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.6.0",
-    "ws": "^8.18.0"
+    "serverless-http": "^3.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "ws": "^8.18.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

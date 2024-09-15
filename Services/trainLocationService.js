@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const TrainLocation = require("../models/trainLocationModel");
-const Location = require("../models/locationModel");
+const TrainLocation = require("../functions/models/trainLocationModel");
+const Location = require("../functions/models/locationModel");
 
 const app = express();
 app.use(bodyParser.json());
